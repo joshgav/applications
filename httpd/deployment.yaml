@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: httpd
+  name: httpd
+spec:
+  selector:
+    matchLabels:
+      app: httpd
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: httpd
+    spec:
+      containers:
+        - name: container
+          image: 'quay.io/fedora/httpd-24:latest'
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          resources:
+            limits:
+              cpu: 500m
+              memory: 500Mi
+            requests:
+              cpu: 100m
+              memory: 100Mi
