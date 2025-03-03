@@ -1,0 +1,29 @@
+---
+# Service Account with minimal permissions to check secrets
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: argocd-hook-sa
+---
+# Role with permissions to get secrets
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: secret-reader
+rules:
+- apiGroups: [""]
+  resources: ["secrets"]
+  verbs: ["get", "list"]
+---
+# RoleBinding to bind the role to the service account
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: argocd-hook-secret-reader
+subjects:
+- kind: ServiceAccount
+  name: argocd-hook-sa
+roleRef:
+  kind: Role
+  name: secret-reader
+  apiGroup: rbac.authorization.k8s.io
