@@ -1,0 +1,7 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- ./awssm-sealed-secret.yaml
+- ./awssm-clustersecretstore.yaml
+- ./awssm-externalsecret-test.yaml
+- ./awssm-externalsecret-repo.yaml
