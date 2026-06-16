@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: httpd-with-pv
+  name: httpd
+spec:
+  selector:
+    matchLabels:
+      app: httpd
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: httpd
+    spec:
+      initContainers:
+      - name: web-content-initializer
+        image: busybox
+        command: ['sh', '-c']
+        args:
+        - |
+            if [[ ! -e /mnt/init/index.html ]]; then
+              echo "Hello from Fedora Apache backed by Persistent Storage!" > /mnt/init/index.html
+            else
+              echo "index.html already exists, not updating"
+            fi
+        volumeMounts:
+        - name: web-storage
+          mountPath: /mnt/init
+      containers:
+        - name: container
+          image: 'quay.io/fedora/httpd-24:latest'
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          resources:
+            limits:
+              cpu: 500m
+              memory: 500Mi
+            requests:
+              cpu: 100m
+              memory: 100Mi
+          volumeMounts:
+          - name: web-storage
+            mountPath: /var/www/html
+      volumes:
+      - name: web-storage
+        persistentVolumeClaim:
+          claimName: httpd-web-pvc
