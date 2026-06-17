@@ -3,6 +3,8 @@ kind: Deployment
 metadata:
   namespace: httpd-with-pv
   name: httpd
+  labels:
+    app: httpd
 spec:
   selector:
     matchLabels:
