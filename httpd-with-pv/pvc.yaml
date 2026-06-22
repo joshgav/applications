@@ -2,7 +2,6 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: httpd-web-pvc
-  namespace: httpd-with-pv
   labels:
     app: httpd
 spec:
